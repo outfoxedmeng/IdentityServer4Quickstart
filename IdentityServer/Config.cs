@@ -27,14 +27,14 @@ namespace IdentityServer
             {
                 new Client
                 {
-                    ClientId  = "client",
+                    ClientId  = "console-client",
 
                     //no interactive user, use the clientid/secret for authentication
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
 
                     ClientSecrets =
                     {
-                        new Secret("secret".Sha256())
+                        new Secret("console-secret".Sha256())
                     },
 
                     AllowedScopes = {"api1"}

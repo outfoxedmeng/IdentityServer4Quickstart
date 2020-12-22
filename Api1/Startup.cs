@@ -23,11 +23,19 @@ namespace Api1
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
             services.AddControllers();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Api1Scope", builder =>
+                {
+                    builder.RequireAuthenticatedUser();
+                    builder.RequireClaim("scope", "api1");
+                });
+            });
 
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
@@ -46,7 +54,7 @@ namespace Api1
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -65,7 +73,8 @@ namespace Api1
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers()
+                .RequireAuthorization("Api1Scope");
             });
         }
     }
