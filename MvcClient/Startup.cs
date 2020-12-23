@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication;
 
 namespace MvcClient
 {
@@ -21,10 +23,43 @@ namespace MvcClient
         public IConfiguration Configuration { get; }
 
 
-        //https://identityserver4.readthedocs.io/en/latest/quickstarts/2_interactive_aspnetcore.html
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies";
+                options.DefaultChallengeScheme = "oidc";
+            })
+                .AddCookie("Cookies")//添加可以处理cookies的处理程序
+                .AddOpenIdConnect("oidc", options =>
+                 {
+                     options.Authority = "https://localhost:5001";
+
+                     options.ClientId = "mvc-client";
+                     options.ClientSecret = "mvc-secret";
+                     options.ResponseType = "code";
+
+
+
+                     //Getting claims from the UserInfo endpoint
+                     options.Scope.Clear();
+                     options.Scope.Add("openid");
+                     options.Scope.Add("profile");
+
+                     options.ClaimActions.MapUniqueJsonKey("myIdentityResource1", "myIdentityResource1");
+
+                     // keeps id_token smaller
+                     options.GetClaimsFromUserInfoEndpoint = true;
+
+                     options.SaveTokens = true;
+
+
+                 });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -43,13 +78,16 @@ namespace MvcClient
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}")
+                .RequireAuthorization(); //禁用了匿名访问（也可以选择性的使用[Authorize]）
+
             });
         }
     }
