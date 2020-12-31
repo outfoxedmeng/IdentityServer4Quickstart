@@ -43,21 +43,22 @@ namespace MvcClient
                      options.ClientSecret = "mvc-secret";
                      options.ResponseType = "code";
 
-
-
                      //Getting claims from the UserInfo endpoint
                      options.Scope.Clear();
                      options.Scope.Add("openid");
                      options.Scope.Add("profile");
 
-                     options.ClaimActions.MapUniqueJsonKey("myIdentityResource1", "myIdentityResource1");
+                     //非标准IdentityResource
+                     options.Scope.Add("myIdentityResource1");
+                     
+                     //注意，这里的参数是指定的非标准ClaimType，而不是IdneityResource的名称
+                     options.ClaimActions.MapUniqueJsonKey("myclaim1", "myclaim1");
+
 
                      // keeps id_token smaller
                      options.GetClaimsFromUserInfoEndpoint = true;
 
                      options.SaveTokens = true;
-
-
                  });
 
         }

@@ -51,8 +51,9 @@ namespace IdentityServer
 
                     AllowedGrantTypes = GrantTypes.Code,
 
+                    RequirePkce = false,
                     //主动发送用户信息  （客户端也可以主动获取）
-                     //AlwaysIncludeUserClaimsInIdToken = true,
+                    //AlwaysIncludeUserClaimsInIdToken = true,
 
                     RedirectUris  = {"https://localhost:5002/signin-oidc"},
 
