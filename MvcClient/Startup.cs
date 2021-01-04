@@ -47,10 +47,12 @@ namespace MvcClient
                      options.Scope.Clear();
                      options.Scope.Add("openid");
                      options.Scope.Add("profile");
+                     options.Scope.Add("api1");
+                     options.Scope.Add("offline_access");
 
                      //非标准IdentityResource
                      options.Scope.Add("myIdentityResource1");
-                     
+
                      //注意，这里的参数是指定的非标准ClaimType，而不是IdneityResource的名称
                      options.ClaimActions.MapUniqueJsonKey("myclaim1", "myclaim1");
 

@@ -59,11 +59,15 @@ namespace IdentityServer
 
                     PostLogoutRedirectUris = {"https://localhost:5002/signout-callback-oidc"},
 
+                    //Enable support for refresh token - 启用refresh token
+                    AllowOfflineAccess = true,
+
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId, // oidc 必须
                         IdentityServerConstants.StandardScopes.Profile ,//oidc 必须
-                        "myIdentityResource1"
+                        "myIdentityResource1",
+                        "api1"
                     }
                 }
             };
